@@ -107,7 +107,7 @@ static dispatch_queue_t YYAsyncLayerGetReleaseQueue() {
 #pragma mark - Private
 
 - (void)_displayAsync:(BOOL)async {
-    __strong id<YYAsyncLayerDelegate> delegate = self.delegate;
+    __strong id<YYAsyncLayerDelegate> delegate = (id)self.delegate;
     YYAsyncLayerDisplayTask *task = [delegate newAsyncDisplayTask];
     if (!task.display) {
         if (task.willDisplay) task.willDisplay(self);
@@ -147,7 +147,7 @@ static dispatch_queue_t YYAsyncLayerGetReleaseQueue() {
             }
             UIGraphicsBeginImageContextWithOptions(size, opaque, scale);
             CGContextRef context = UIGraphicsGetCurrentContext();
-            if (opaque) {
+            if (opaque && context) {
                 CGContextSaveGState(context); {
                     if (!backgroundColor || CGColorGetAlpha(backgroundColor) < 1) {
                         CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
@@ -192,7 +192,7 @@ static dispatch_queue_t YYAsyncLayerGetReleaseQueue() {
         if (task.willDisplay) task.willDisplay(self);
         UIGraphicsBeginImageContextWithOptions(self.bounds.size, self.opaque, self.contentsScale);
         CGContextRef context = UIGraphicsGetCurrentContext();
-        if (self.opaque) {
+        if (self.opaque && context) {
             CGSize size = self.bounds.size;
             size.width *= self.contentsScale;
             size.height *= self.contentsScale;
